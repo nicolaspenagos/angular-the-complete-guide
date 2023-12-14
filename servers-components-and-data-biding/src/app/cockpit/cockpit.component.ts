@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Server } from '../model/server';
 
 @Component({
@@ -7,21 +13,32 @@ import { Server } from '../model/server';
   styleUrl: './cockpit.component.css',
 })
 export class CockpitComponent {
-  newServerName = '';
-  newServerContent = '';
-  onAddServer() {
-    // this.serverElements.push({
-    //   type: 'server',
-    //   name: this.newServerName,
-    //   content: this.newServerContent,
-    // });
+  // newServerName = '';
+  // newServerContent = '';
+  @Output() serverCreated = new EventEmitter<Server>();
+  @Output('bpCreated') blueprintCreated = new EventEmitter<Server>();
+  @ViewChild('serverContentInput', { static: true })
+  serverContentInput!: ElementRef;
+
+  onAddServer(nameInput: HTMLInputElement) {
+    console.log(nameInput.value);
+    this.serverCreated.emit(
+      // new Server('server', this.newServerName, this.newServerContent)
+      new Server(
+        'server',
+        nameInput.value,
+        this.serverContentInput.nativeElement.value
+      )
+    );
   }
 
-  onAddBlueprint() {
-    // this.serverElements.push({
-    //   type: 'blueprint',
-    //   name: this.newServerName,
-    //   content: this.newServerContent,
-    // });
+  onAddBlueprint(nameInput: HTMLInputElement) {
+    this.blueprintCreated.emit(
+      new Server(
+        'blueprint',
+        nameInput.value,
+        this.serverContentInput.nativeElement.value
+      )
+    );
   }
 }
