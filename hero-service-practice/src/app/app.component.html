@@ -1,0 +1,9 @@
+<div>
+  <button (click)="addHero()" >Add Dummy Hero</button>
+  <ul>
+    @for(hero of heroes; track $index){
+      <li>{{hero.name}}</li>
+    }
+  </ul>
+  <p> Total of heroes: {{this.heroesCounter}}</p>
+</div>
