@@ -10,25 +10,24 @@ import { Hero } from '../model/hero.model';
 export class AppComponent implements OnInit {
   heroes!: Hero[];
   heroesCounter!: number;
-  constructor(private heroService: HeroService) {}
+  currentHeroName = 'No name';
+
+  constructor(
+    private heroService: HeroService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   getHeroes(): void {
     this.heroService.getHeroes().subscribe((heroes) => (this.heroes = heroes));
   }
 
-  getHeroesCounter(): void {
- 
-    this.heroService
-      .getHeroesCounter()
-      .subscribe((counter) => {this.heroesCounter = counter});
-  }
-
   ngOnInit(): void {
     this.getHeroes();
-    this.getHeroesCounter();
   }
 
-  addHero(): void {
-    this.heroService.mockedAddHero('new hero');
+  async addHero(): Promise<void> {
+    await this.heroService.mockedAddHero(
+      this.currentHeroName === '' ? 'No name' : this.currentHeroName
+    );
   }
 }

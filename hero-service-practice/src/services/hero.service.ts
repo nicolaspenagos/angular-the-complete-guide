@@ -1,4 +1,4 @@
-import { Injectable, ChangeDetectorRef } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { Hero } from '../model/hero.model';
 import { HEROES } from '../constants/hero.constant';
 import { Observable, of } from 'rxjs';
@@ -8,26 +8,24 @@ import { Observable, of } from 'rxjs';
 })
 export class HeroService {
   heroes!: Hero[];
-  heroesCounter!:number;
 
   constructor() {
     this.heroes = HEROES;
-    this.heroesCounter = this.heroes.length;
   }
 
   getHeroes(): Observable<Hero[]> {
     return of(this.heroes);
   }
 
-  getHeroesCounter(): Observable<number> {
-    return of(this.heroesCounter);
-  }
-
-  mockedAddHero(name: string): void {
-    setTimeout(() => {
-      this.heroes.push(new Hero(name));
-      this.heroesCounter = this.heroes.length;
-      console.log(this.heroesCounter);
-    }, 1500);
+  mockedAddHero(name: string): Promise<void> {
+    const promise = new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+        this.heroes.push(new Hero(name));
+        resolve();
+      }, 1500);
+    });
+    return promise;
+    
+   
   }
 }
