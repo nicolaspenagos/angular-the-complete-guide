@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <!-- Pass our form to the directive-->
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div formGroupName="userData">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-control"
+            />
+            @if(!signupForm.get('userData.username')?.valid&&signupForm.get('userData.username')?.touched
+            ){
+            <span class="help-block">
+              @if(signupForm.get('userData.username')?.errors!['nameIsForbidden']){
+              <span class="help-block">Invalid username!</span>
+              } @if(signupForm.get('userData.username')?.errors!['required']){
+              <span class="help-block">This is required!</span>
+              }
+            </span>
+            }
+          </div>
+          <div class="form-group">
+            <label for="email">email</label>
+            <input
+              type="text"
+              id="email"
+              formControlName="email"
+              class="form-control"
+            />
+            @if(!signupForm.get('userData.email')?.valid&&signupForm.get('userData.email')?.touched
+            ){
+            <span class="help-block">Please enter a valid email!</span>
+            }
+          </div>
+        </div>
+        <div class="radio" *ngFor="let gender of genders">
+          <label>
+            <input type="radio" formControlName="gender" [value]="gender" />{{
+              gender
+            }}
+          </label>
+        </div>
+        <div formArrayName="hobbies">
+          <h4>Your hobbies</h4>
+          <button class="btn btn-primary" type="button" (click)="onAddHobby()">
+            Add hobbie
+          </button>
+          @for(hobby of getControls(); track $index){
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              [formControlName]="$index"
+            />
+          </div>
+          }
+        </div>
+        @if(!signupForm.valid&&signupForm.touched ){
+        <span class="help-block">Please enter a valid data!</span>
+        }
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!signupForm.valid"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
