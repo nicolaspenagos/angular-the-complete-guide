@@ -1,0 +1,4 @@
+@if(control.touched&&control.errors){ @for(error of errors; track $index){
+@if(control.errors[error.key]){
+<span class="help-block">{{ error.msg }}</span>
+} } }
