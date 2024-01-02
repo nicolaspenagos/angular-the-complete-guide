@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <input type="text" [(ngModel)]="filterStatus" />
+
+      <br />
+      <button class="btn btn-primary" (click)="onAddServer()">
+        Add Server
+      </button>
+      <br />
+      <br />
+      <!-- Async Pipe -->
+      <h2>App Status: {{ appStatus | async }}</h2>
+      <hr />
+      <ul class="list-group">
+        @for( server of servers | sortByDate|filter:filterStatus:'status'; track
+        $index){
+        <li class="list-group-item" [ngClass]="getStatusClasses(server)">
+          <span class="badge">
+            {{ server.status }}
+          </span>
+          <strong>{{ server.name | shorten : 15 }}</strong> |
+          {{ server.instanceType | uppercase | reverse }} |
+          <!-- Parse from left to right E.g.: uppercase pipe is applied to the result of the date pipe: -->
+          {{ server.started | date : "fullDate" | uppercase }}
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
