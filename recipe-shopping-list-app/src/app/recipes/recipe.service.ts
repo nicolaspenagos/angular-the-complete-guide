@@ -9,20 +9,8 @@ import { Subject } from 'rxjs';
 })
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
-  private recepies: Recipe[] = [
-    new Recipe(
-      'Tasty Schnitzel',
-      'This is just a test',
-      'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/evespudding_83911_16x9.jpg',
-      [new Ingrdient('Meat', 1), new Ingrdient('French Fries', 20)]
-    ),
-    new Recipe(
-      'Big Fat Burger',
-      'This is just a test',
-      'https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/evespudding_83911_16x9.jpg',
-      [new Ingrdient('Buns', 2), new Ingrdient('Meat', 1)]
-    ),
-  ];
+
+  private recepies: Recipe[] = [];
 
   getRecipies() {
     return this.recepies.slice();
@@ -40,19 +28,24 @@ export class RecipeService {
   addRecipe(recipe: Recipe) {
     this.recepies.push(recipe);
 
-    this.updateList();
+    this.notifyChange();
   }
   updateRecipe(index: number, recipe: Recipe) {
     this.recepies[index] = recipe;
-    this.updateList();
+    this.notifyChange();
   }
 
   deleteRecipe(index: number) {
     this.recepies.splice(index, 1);
-    this.updateList();
+    this.notifyChange();
   }
 
-  updateList() {
+  setRecipes(recipes: Recipe[]) {
+    this.recepies = recipes;
+    this.notifyChange();
+  }
+
+  notifyChange() {
     this.recipesChanged.next(this.recepies.slice());
   }
 }
