@@ -17,14 +17,24 @@
     ></div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
+        @if(!isAuthtenticated){
+        <li routerLinkActive="active">
+          <a routerLink="/auth">Authenticate</a>
+        </li>
+        } @if(isAuthtenticated){
         <li routerLinkActive="active">
           <a routerLink="/recipes">Recipes</a>
         </li>
+        }
         <li routerLinkActive="active">
           <a routerLink="/shopping-list">Shopping List</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        @if(isAuthtenticated){
+        <li>
+          <a style="cursor: pointer" (click)="onLogout()">Logout</a>
+        </li>
         <li class="dropdown" appDropdown>
           <a class="dropdown-toggle" role="button" style="cursor: pointer"
             >Manage <span class="caret"></span
@@ -34,10 +44,13 @@
               <a style="cursor: pointer" (click)="onSaveData()">Saving Data</a>
             </li>
             <li>
-              <a style="cursor: pointer" (click)="onFetchData()">Fetching Data</a>
+              <a style="cursor: pointer" (click)="onFetchData()"
+                >Fetching Data</a
+              >
             </li>
           </ul>
         </li>
+        }
       </ul>
     </div>
   </div>
