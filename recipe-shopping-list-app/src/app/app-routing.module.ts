@@ -1,14 +1,5 @@
-import { RouterModule, Routes } from '@angular/router';
-import { ShoppingListComponent } from './shopping-list/shopping-list.component';
-import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
-import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { RecipesComponent } from './recipes/recipes.component';
-import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
-import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
-import { recipesResolve } from './recipes/recipe-resolver.service';
-import { AuthComponent } from './auth/auth.component';
-import { authGuard } from './auth/auth.guard';
 
 const appRoutes: Routes = [
   {
@@ -17,37 +8,37 @@ const appRoutes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'shopping-list',
-    component: ShoppingListComponent,
-    children: [{ path: 'edit', component: ShoppingEditComponent }],
+    path: 'recipes',
+    // Only load the conde bundle when the user reach this component
+    // make sure to not have any imports of the RecipeModules in any other
+    // part different than the RecipesModules
+    loadChildren: () =>
+      import('./recipes/recipes.module').then((m) => m.RecipesModule),
   },
   {
-    path: 'recipes',
-    component: RecipesComponent,
-    canActivate: [authGuard],
-    children: [
-      { path: '', component: RecipeStartComponent },
-      { path: 'new', component: RecipeEditComponent },
-      {
-        path: ':id',
-        component: RecipeDetailComponent,
-        resolve: [recipesResolve],
-      },
-      {
-        path: ':id/edit',
-        component: RecipeEditComponent,
-        resolve: [recipesResolve],
-      },
-    ],
+    path: 'shopping-list',
+    loadChildren: () =>
+      import('./shopping-list/shopping-list.module').then(
+        (m) => m.ShoppingListModule
+      ),
   },
   {
     path: 'auth',
-    component: AuthComponent,
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [
+    RouterModule.forRoot(appRoutes, {
+      // Preload all modules using lazy loading
+      // once the initial bundle gets downloaded,
+      // the rest of the modules are donwloaded as soon
+      // as possible. Results in:
+      // Fast inital load and fast subsequent loads 
+      preloadingStrategy: PreloadAllModules,
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
