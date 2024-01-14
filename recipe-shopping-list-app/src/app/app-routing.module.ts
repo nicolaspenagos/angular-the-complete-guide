@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/auth',
+    redirectTo: '/recipes',
     pathMatch: 'full',
   },
   {
@@ -35,7 +35,7 @@ const appRoutes: Routes = [
       // once the initial bundle gets downloaded,
       // the rest of the modules are donwloaded as soon
       // as possible. Results in:
-      // Fast inital load and fast subsequent loads 
+      // Fast inital load and fast subsequent loads
       preloadingStrategy: PreloadAllModules,
     }),
   ],
