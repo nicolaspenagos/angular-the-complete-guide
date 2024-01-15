@@ -16,6 +16,7 @@ export const authSucess = createAction(
     userId: string;
     token: string;
     expirationDate: Date;
+    redirect: boolean;
   }>()
 );
 

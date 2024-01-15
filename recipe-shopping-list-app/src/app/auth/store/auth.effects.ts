@@ -42,6 +42,7 @@ const handleAuth = ({
     userId: localId,
     token: idToken,
     expirationDate,
+    redirect: true,
   });
 };
 
@@ -131,8 +132,8 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(authSucess),
-        tap(() => {
-          this.router.navigate(['/']);
+        tap((authSuccessAction) => {
+          if (authSuccessAction.redirect) this.router.navigate(['/']);
         })
       ),
     { dispatch: false }
@@ -184,6 +185,7 @@ export class AuthEffects {
             userId: loadedUser.id,
             token: loadedUser.token,
             expirationDate: tokenDate,
+            redirect: false,
           });
         }
         return { type: 'DUMMY' };

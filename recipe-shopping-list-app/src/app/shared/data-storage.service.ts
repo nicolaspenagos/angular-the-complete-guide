@@ -1,9 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Recipe } from '../recipes/recipe.model';
-import { RecipeService } from '../recipes/recipe.service';
-import { exhaustMap, map, take, tap } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+
+import {  map,  tap } from 'rxjs';
+
+import { AppState } from '../store/app.reducer';
+import { Store } from '@ngrx/store';
+import { setRecipes } from '../recipes/store/recipe.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -13,17 +16,10 @@ export class DataStorageService {
 
   constructor(
     private http: HttpClient,
-    private recipesService: RecipeService,
-    private authService: AuthService
+    private store: Store<AppState>
   ) {}
 
-  storeRecipes() {
-    const recipes = this.recipesService.getRecipies();
 
-    this.http.put(this.url, recipes).subscribe((responseData) => {
-      console.log(responseData);
-    });
-  }
 
   // Hanlding putting token in the params
   // fetchRecipes() {
@@ -52,12 +48,13 @@ export class DataStorageService {
   fetchRecipes() {
     return this.http.get<Recipe[]>(this.url).pipe(
       map((recipes: Recipe[]) => {
+        recipes = recipes ? recipes : [];
         return recipes.map((recipe) =>
           recipe.ingredients ? recipe : { ...recipe, ingredients: [] }
         );
       }),
       tap((recipes) => {
-        this.recipesService.setRecipes(recipes);
+        this.store.dispatch(setRecipes({ recepies: recipes }));
       })
     );
   }

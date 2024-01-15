@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthResponseData, AuthService } from './auth.service';
-import { Observable, Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
 
 import { PalceholderDirective } from '../shared/placeholder/palceholder.directive';
@@ -18,22 +16,16 @@ import { AuthState } from './store/auth.reducer';
   styleUrl: './auth.component.css',
 })
 export class AuthComponent implements OnDestroy, OnInit {
-  isLoginMode: boolean = true;
-  isLoading: boolean = false;
   private closeSub!: Subscription;
   private storeSub!: Subscription;
-
+  isLoginMode: boolean = true;
+  isLoading: boolean = false;
   error: string | null = null;
-
   // @ViewChild will find the first element containing this type PlaceholderDirective
   @ViewChild(PalceholderDirective, { static: false })
   alertHost!: PalceholderDirective;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private store: Store<AppState>
-  ) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.storeSub = this.store
